@@ -1,18 +1,22 @@
-import React from 'react'
+import About from "./About"
+import Categories from "./Categories"
+import Hero from "./Hero"
+import SpecialOffers from "./SpecialOffers"
+import WhyChooseUs from "./WhyChooseUs "
 
-const Home = () => {
+const index = () => {
     return (
-        <main>
-            <div className="container">
-                <div className="row">
-                    <div className="col text-center">
-                        <h1>Home</h1>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing Lorem ipsum dolor sit.</p>
-                    </div>
-                </div>
-            </div>
-        </main>
+        <>
+            <section>
+                <Hero />
+                <Categories />
+                <About />
+                <WhyChooseUs />
+                <SpecialOffers />
+            </section>
+
+        </>
     )
 }
 
-export default Home
+export default index

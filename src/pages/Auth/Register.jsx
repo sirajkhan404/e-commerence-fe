@@ -26,7 +26,6 @@ const Register = () => {
         name = name.trim()
 
         if (name.length < 3) { return window.toastify("Please enter your name", "error") }
-        if (!window.isValidEmail(email)) { return window.toastify("Please enter a valid email", "error") }
         if (password.length < 6) { return window.toastify("Password must be at least 6 characters long", "error") }
         if (password !== confirmPassword) { return window.toastify("Passwords do not match", "error") }
 

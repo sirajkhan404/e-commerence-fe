@@ -27,8 +27,6 @@ const Login = () => {
 
         let { email, password } = state
 
-        if (!window.isValidEmail(email)) { return window.toastify("Please enter a valid email", "error") }
-
         const formData = { email, password }
 
         setIsProcessing(true)
