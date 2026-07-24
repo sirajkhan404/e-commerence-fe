@@ -364,7 +364,7 @@ const Orders = () => {
                 okText="Update Order"
                 confirmLoading={isProcessing}
                 okButtonProps={{ type: 'primary' }}
-                destroyOnClose={true}
+
             >
                 {orderToEdit && (
                     <div style={{ marginBottom: 16, padding: '12px 16px', background: '#f8f9fc', borderRadius: 10, border: '1px solid #e5e7eb' }}>
