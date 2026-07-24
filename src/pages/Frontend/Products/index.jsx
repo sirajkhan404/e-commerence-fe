@@ -163,7 +163,7 @@ const Products = () => {
                 width={520}
                 className="order-modal"
                 centered
-                destroyOnClose
+                destroyOnHidden
             >
                 {selectedProduct && (
                     <div className="order-modal__inner">
