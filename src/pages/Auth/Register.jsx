@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Button, Col, Form, Input, Row, Typography } from 'antd'
-import { Link, useNavigate, } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios';
 
 const { Title, Paragraph } = Typography;
@@ -14,12 +14,10 @@ const Register = () => {
     const [state, setState] = useState(initialState)
     const [isProcessing, setIsProcessing] = useState(false)
 
-
     const handleChange = e => setState(s => ({ ...s, [e.target.name]: e.target.value }))
 
-    const handleSubmit = e => {
-
-        e.preventDefault()
+    // Ant Design's onFinish triggers on submit (Works seamlessly on Mobile Keyboards)
+    const handleSubmit = () => {
 
         let { name, email, password, confirmPassword } = state
 
@@ -43,9 +41,13 @@ const Register = () => {
                 }
             })
             .catch(err => {
-                const { status, data } = err.response
-                if (status === 400) { window.toastify(data.message, "error") }
-                else { window.toastify("Something went wrong", "error") }
+                if (err.response) {
+                    const { status, data } = err.response
+                    if (status === 400) { window.toastify(data.message || "Invalid input", "error") }
+                    else { window.toastify("Something went wrong", "error") }
+                } else {
+                    window.toastify("Network error or server unreachable", "error")
+                }
             })
             .finally(() => {
                 setIsProcessing(false)
@@ -54,7 +56,7 @@ const Register = () => {
     }
 
     return (
-        <main className='auth p-3 p-md-4 p-lg-5 ' >
+        <main className='auth p-3 p-md-4 p-lg-5'>
             <div className="card p-3 p-md-4">
                 <Row>
                     <Col span={24} className='text-center mb-4'>
@@ -62,12 +64,13 @@ const Register = () => {
                         <Paragraph>Already have an account? <Link to="/auth/login">Login</Link></Paragraph>
                     </Col>
                     <Col span={24}>
-                        <Form layout="vertical">
+                        {/* Added onFinish here */}
+                        <Form layout="vertical" onFinish={handleSubmit}>
                             <Form.Item label="Name" required>
                                 <Input placeholder='Enter your name' size='large' name='name' value={state.name} onChange={handleChange} />
                             </Form.Item>
                             <Form.Item label="Email" required>
-                                <Input placeholder='Enter your email' size='large' name='email' value={state.email} onChange={handleChange} />
+                                <Input placeholder='Enter your email' size='large' name='email' type="email" value={state.email} onChange={handleChange} />
                             </Form.Item>
                             <Form.Item label="Password" required>
                                 <Input.Password placeholder='Enter your password' size='large' name='password' value={state.password} onChange={handleChange} />
@@ -76,7 +79,10 @@ const Register = () => {
                                 <Input.Password placeholder='Confirm your password' size='large' name='confirmPassword' value={state.confirmPassword} onChange={handleChange} />
                             </Form.Item>
                             <Form.Item className='mb-0'>
-                                <Button type="primary" size='large' block className='mb-2' htmlType="submit" loading={isProcessing} onClick={handleSubmit}>Register</Button>
+                                {/* Removed onClick={handleSubmit} from Button */}
+                                <Button type="primary" size='large' block className='mb-2' htmlType="submit" loading={isProcessing}>
+                                    Register
+                                </Button>
                             </Form.Item>
                         </Form>
                     </Col>
