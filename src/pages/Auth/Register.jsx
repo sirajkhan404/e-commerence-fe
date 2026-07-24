@@ -41,10 +41,11 @@ const Register = () => {
                 }
             })
             .catch(err => {
-                if (err.response) {
+                console.log("err", err)
+                if (err?.response) {
                     const { status, data } = err.response
-                    if (status === 400) { window.toastify(data.message || "Invalid input", "error") }
-                    else { window.toastify("Something went wrong", "error") }
+                    if (status === 400) { window.toastify(data?.message || "Invalid input", "error") }
+                    else { window.toastify(data?.message || "Something went wrong", "error") }
                 } else {
                     window.toastify("Network error or server unreachable", "error")
                 }

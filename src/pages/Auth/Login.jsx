@@ -45,10 +45,13 @@ const Login = () => {
             })
             .catch(err => {
                 console.log('err', err)
-                const status = err.response ? err.response.status : 500
-                const data = err.response ? err.response.data : { message: "Internal server error" }
-                if (status === 400) { window.toastify(data.message, "error") }
-                else { window.toastify("Something went wrong", "error") }
+                if (err?.response) {
+                    const { status, data } = err.response
+                    if (status === 400 || status === 401) { window.toastify(data?.message || "Invalid credentials", "error") }
+                    else { window.toastify(data?.message || "Something went wrong", "error") }
+                } else {
+                    window.toastify("Network error or server unreachable", "error")
+                }
             })
             .finally(() => {
                 setIsProcessing(false)

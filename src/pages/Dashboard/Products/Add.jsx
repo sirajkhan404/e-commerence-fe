@@ -61,10 +61,13 @@ const Add = () => {
             })
             .catch(err => {
                 console.log("err", err)
-                const status = err.response ? err.response.status : 500
-                const data = err.response ? err.response.data : { message: "Internal server error" }
-                if (status === 400) { window.toastify(data.message, "error") }
-                else { window.toastify("Something went wrong", "error") }
+                if (err?.response) {
+                    const { status, data } = err.response
+                    if (status === 400) { window.toastify(data?.message || "Invalid input", "error") }
+                    else { window.toastify(data?.message || "Something went wrong", "error") }
+                } else {
+                    window.toastify("Network error or server unreachable", "error")
+                }
             })
             .finally(() => {
                 setIsProcessing(false)

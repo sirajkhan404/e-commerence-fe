@@ -1,6 +1,4 @@
-import { message } from 'antd'
-
-window.toastify = (msg, type) => message[type](msg);
+window.toastify = (msg, type = "info") => console.log(`[${type}]:`, msg);
 window.getRandomID = () => Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
 
 window.isValidPassword = (password) => /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/.test(password);
