@@ -9,7 +9,7 @@ const { Title } = Typography
 const { TextArea } = Input
 const { Dragger } = Upload
 
-const categories = ["Electronics", "Clothing", "Footwear", "Books", "Home & Kitchen", "Sports", "Toys", "Beauty", "Grocery", "Other",]
+const categories = ["Electronics", "Clothing", "Footwear", "Books", "Home & Kitchen", "Sports", "Toys", "Beauty", "Grocery", "Other", "Fast Food",]
 
 const initialState = { name: "", price: "", stock: "", category: "", description: "", image: null, }
 
