@@ -40,7 +40,7 @@ const Login = () => {
                     window.toastify(data.message, "success")
                     setState(initialState)
                     readProfile(token)
-                    navigate("/dashboard")
+                    navigate("/")
                 }
             })
             .catch(err => {

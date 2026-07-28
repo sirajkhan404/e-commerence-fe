@@ -7,7 +7,7 @@ import axios from 'axios'
 
 const { TextArea } = Input;
 
-const categories = ["Electronics", "Clothing", "Footwear", "Books", "Home & Kitchen", "Sports", "Toys", "Beauty", "Grocery", "Other"]
+const categories = ["Electronics", "Clothing", "Footwear", "Books", "Home & Kitchen", "Sports", "Toys", "Beauty", "Grocery", "Other", "Fast Food"]
 
 const All = () => {
 

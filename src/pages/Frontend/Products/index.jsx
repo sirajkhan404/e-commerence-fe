@@ -1,7 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { Modal, Form, Input, Button, Spin, Empty, InputNumber } from 'antd'
-import { ShoppingCartOutlined, EnvironmentOutlined, UserOutlined, PhoneOutlined } from '@ant-design/icons'
+import {
+    ShoppingCartOutlined,
+    EnvironmentOutlined,
+    UserOutlined,
+    PhoneOutlined,
+    SearchOutlined,
+    FireOutlined,
+    AppstoreOutlined,
+    FireFilled
+} from '@ant-design/icons'
 import { useAuth } from '@/context/Auth'
 import './Products.scss'
 
@@ -10,6 +19,10 @@ const Products = () => {
     const { isAuth } = useAuth()
     const [products, setProducts] = useState([])
     const [loading, setLoading] = useState(true)
+
+    // Filter & Search states
+    const [searchQuery, setSearchQuery] = useState('')
+    const [selectedCategory, setSelectedCategory] = useState('All')
 
     // Order modal state
     const [orderModal, setOrderModal] = useState(false)
@@ -33,6 +46,17 @@ const Products = () => {
     }
 
     useEffect(() => { fetchProducts() }, [])
+
+    // ── Extract Categories ──────────────────────────────────────────────
+    const categoriesList = ['All', ...new Set(products.map(p => p.category).filter(Boolean))]
+
+    // ── Filtered Products ───────────────────────────────────────────────
+    const filteredProducts = products.filter(product => {
+        const matchesCategory = selectedCategory === 'All' || product.category?.toLowerCase() === selectedCategory.toLowerCase()
+        const matchesSearch = product.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            product.description?.toLowerCase().includes(searchQuery.toLowerCase())
+        return matchesCategory && matchesSearch
+    })
 
     // ── Open Order modal ───────────────────────────────────────────────
     const openOrderModal = (product) => {
@@ -92,29 +116,72 @@ const Products = () => {
         <main className="products-page">
             {/* ── Hero Banner ────────────────────────────────────── */}
             <section className="products-hero">
-                <div className="products-hero__content">
-                    <span className="products-hero__badge">Our Collection</span>
-                    <h1 className="products-hero__title">Shop Premium Products</h1>
-                    <p className="products-hero__subtitle">Discover our handpicked selection of quality items</p>
+                <div className="container position-relative" style={{ zIndex: 1 }}>
+                    <div className="products-hero__badge">
+                        <FireFilled />
+                        <span>OUR EXCLUSIVE MENU</span>
+                    </div>
+                    <h1 className="products-hero__title">Explore Fresh &amp; Delicious Food</h1>
+                    <p className="products-hero__subtitle">Discover our handpicked selection of gourmet items, fresh pizza, juicy burgers, and refreshing drinks.</p>
+                </div>
+            </section>
+
+            {/* ── Toolbar: Search & Filter Pills ──────────────────── */}
+            <section className="container">
+                <div className="products-toolbar">
+                    <div className="products-toolbar-card">
+                        <div className="row align-items-center gy-3">
+
+                            {/* Search Input */}
+                            <div className="col-lg-4 col-md-5">
+                                <Input
+                                    size="large"
+                                    placeholder="Search food items..."
+                                    prefix={<SearchOutlined style={{ color: '#94a3b8' }} />}
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    allowClear
+                                    style={{ borderRadius: '12px' }}
+                                />
+                            </div>
+
+                            {/* Category Pills */}
+                            <div className="col-lg-8 col-md-7">
+                                <div className="filter-pills justify-content-md-end">
+                                    {categoriesList.map((cat, idx) => (
+                                        <button
+                                            key={idx}
+                                            className={`filter-pill-btn ${selectedCategory === cat ? 'active' : ''}`}
+                                            onClick={() => setSelectedCategory(cat)}
+                                        >
+                                            {cat === 'All' && <AppstoreOutlined className="me-1" />}
+                                            {cat}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
             </section>
 
             {/* ── Products Grid ──────────────────────────────────── */}
-            <section className="products-section">
-                <div className="container">
-                    {loading ? (
-                        <div className="products-loader">
-                            <Spin size="large" />
-                            <p>Loading products...</p>
-                        </div>
-                    ) : products.length === 0 ? (
-                        <div className="products-empty">
-                            <Empty description="No products available right now" />
-                        </div>
-                    ) : (
-                        <div className="products-grid">
-                            {products.map(product => (
-                                <div className="product-card" key={product._id}>
+            <section className="container">
+                {loading ? (
+                    <div className="products-loader">
+                        <Spin size="large" />
+                        <p>Loading fresh food items...</p>
+                    </div>
+                ) : filteredProducts.length === 0 ? (
+                    <div className="products-empty">
+                        <Empty description="No food items found" />
+                    </div>
+                ) : (
+                    <div className="row g-4">
+                        {filteredProducts.map(product => (
+                            <div className="col-12 col-sm-6 col-md-4 col-lg-3" key={product._id || product.id}>
+                                <div className="product-card">
                                     <div className="product-card__image-wrap">
                                         <img
                                             src={product.imageURL}
@@ -132,7 +199,7 @@ const Products = () => {
                                             <span className="product-card__price">
                                                 Rs. {Number(product.price).toLocaleString()}
                                             </span>
-                                            <span className={`product-card__stock ${product.stock <= 5 ? 'low' : ''}`}>
+                                            <span className={`product-card__stock ${product.stock <= 0 ? 'out' : product.stock <= 5 ? 'low' : ''}`}>
                                                 {product.stock <= 0 ? 'Out of stock' : product.stock <= 5 ? `Only ${product.stock} left` : `In stock: ${product.stock}`}
                                             </span>
                                         </div>
@@ -148,10 +215,10 @@ const Products = () => {
                                         </button>
                                     </div>
                                 </div>
-                            ))}
-                        </div>
-                    )}
-                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
             </section>
 
             {/* ── Order Modal ────────────────────────────────────── */}
@@ -172,7 +239,7 @@ const Products = () => {
                             <img src={selectedProduct.imageURL} alt={selectedProduct.name} className="order-modal__product-img" />
                             <div className="order-modal__product-info">
                                 <h3>{selectedProduct.name}</h3>
-                                <p className="order-modal__product-price">$. {Number(selectedProduct.price).toLocaleString()} / item</p>
+                                <p className="order-modal__product-price">Rs. {Number(selectedProduct.price).toLocaleString()} / item</p>
                                 <p className="order-modal__product-cat">{selectedProduct.category}</p>
                             </div>
                         </div>
@@ -189,7 +256,7 @@ const Products = () => {
                                 id="order-quantity"
                             />
                             <span className="order-modal__total">
-                                Total: <strong>$. {(selectedProduct.price * quantity).toLocaleString()}</strong>
+                                Total Amount: <strong>Rs. {(selectedProduct.price * quantity).toLocaleString()}</strong>
                             </span>
                         </div>
 
@@ -247,7 +314,7 @@ const Products = () => {
                                 rules={[{ required: true, message: 'Please enter your city' }]}
                             >
                                 <Input
-                                    placeholder="Karachi"
+                                    placeholder="Faisalabad / Karachi"
                                     id="shipping-city"
                                 />
                             </Form.Item>
@@ -268,7 +335,7 @@ const Products = () => {
                                     icon={<ShoppingCartOutlined />}
                                     id="confirm-order-btn"
                                     size="large"
-                                    style={{ flex: 2, background: '#1d3557', borderColor: '#1d3557' }}
+                                    style={{ flex: 2, background: '#e63946', borderColor: '#e63946' }}
                                 >
                                     Place Order
                                 </Button>
