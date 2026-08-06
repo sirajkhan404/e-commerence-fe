@@ -1,9 +1,7 @@
 import React, { useState } from 'react'
-import { Button, Col, Form, Input, Row, Typography } from 'antd'
+import { Button, Form, Input } from 'antd'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios';
-
-const { Title, Paragraph } = Typography;
 
 const initialState = { name: "", email: "", password: "", confirmPassword: "" }
 
@@ -57,37 +55,96 @@ const Register = () => {
     }
 
     return (
-        <main className='auth p-3 p-md-4 p-lg-5'>
-            <div className="card p-3 p-md-4">
-                <Row>
-                    <Col span={24} className='text-center mb-4'>
-                        <Title level={2} className='text-center'>Register</Title>
-                        <Paragraph>Already have an account? <Link to="/auth/login">Login</Link></Paragraph>
-                    </Col>
-                    <Col span={24}>
-                        {/* Added onFinish here */}
-                        <Form layout="vertical" onFinish={handleSubmit}>
-                            <Form.Item label="Name" required>
-                                <Input placeholder='Enter your name' size='large' name='name' value={state.name} onChange={handleChange} />
-                            </Form.Item>
-                            <Form.Item label="Email" required>
-                                <Input placeholder='Enter your email' size='large' name='email' type="email" value={state.email} onChange={handleChange} />
-                            </Form.Item>
-                            <Form.Item label="Password" required>
-                                <Input.Password placeholder='Enter your password' size='large' name='password' value={state.password} onChange={handleChange} />
-                            </Form.Item>
-                            <Form.Item label="Confirm Password" required>
-                                <Input.Password placeholder='Confirm your password' size='large' name='confirmPassword' value={state.confirmPassword} onChange={handleChange} />
-                            </Form.Item>
-                            <Form.Item className='mb-0'>
-                                {/* Removed onClick={handleSubmit} from Button */}
-                                <Button type="primary" size='large' block className='mb-2' htmlType="submit" loading={isProcessing}>
-                                    Register
-                                </Button>
-                            </Form.Item>
-                        </Form>
-                    </Col>
-                </Row>
+        <main className='auth'>
+
+            {/* Decorative floating dots */}
+            <div className="auth-dots">
+                <span /><span /><span /><span /><span />
+            </div>
+
+            <div className="auth-card">
+
+                {/* Brand */}
+                <div className="auth-brand">
+                    <div className="brand-icon">🛍️</div>
+                    <span className="brand-name">MyStore</span>
+                </div>
+
+                {/* Header */}
+                <div className="auth-header">
+                    <h2 className="auth-title">Create Account</h2>
+                    <p className="auth-subtitle">
+                        Already have an account?{' '}
+                        <Link to="/auth/login">Sign In</Link>
+                    </p>
+                </div>
+
+                <div className="auth-divider" />
+
+                {/* Form */}
+                <Form layout="vertical" onFinish={handleSubmit} autoComplete="off">
+
+                    <Form.Item label="Full Name" required>
+                        <Input
+                            placeholder='Enter your full name'
+                            size='large'
+                            name='name'
+                            value={state.name}
+                            onChange={handleChange}
+                            prefix={<span style={{ color: 'rgba(167,139,250,0.7)', marginRight: 4 }}>👤</span>}
+                        />
+                    </Form.Item>
+
+                    <Form.Item label="Email Address" required>
+                        <Input
+                            placeholder='Enter your email'
+                            size='large'
+                            name='email'
+                            type="email"
+                            value={state.email}
+                            onChange={handleChange}
+                            prefix={<span style={{ color: 'rgba(167,139,250,0.7)', marginRight: 4 }}>✉️</span>}
+                        />
+                    </Form.Item>
+
+                    <Form.Item label="Password" required>
+                        <Input.Password
+                            placeholder='Create a strong password'
+                            size='large'
+                            name='password'
+                            value={state.password}
+                            onChange={handleChange}
+                            prefix={<span style={{ color: 'rgba(167,139,250,0.7)', marginRight: 4 }}>🔒</span>}
+                        />
+                    </Form.Item>
+
+                    <Form.Item label="Confirm Password" required>
+                        <Input.Password
+                            placeholder='Re-enter your password'
+                            size='large'
+                            name='confirmPassword'
+                            value={state.confirmPassword}
+                            onChange={handleChange}
+                            prefix={<span style={{ color: 'rgba(167,139,250,0.7)', marginRight: 4 }}>🔐</span>}
+                        />
+                    </Form.Item>
+
+                    <Form.Item className='mb-0'>
+                        <Button
+                            htmlType="submit"
+                            loading={isProcessing}
+                            className="auth-btn"
+                        >
+                            {!isProcessing && '✨ '} Create Account
+                        </Button>
+                    </Form.Item>
+
+                </Form>
+
+                <p className="auth-footer-text">
+                    🔒 Your data is safe & encrypted
+                </p>
+
             </div>
         </main>
     )

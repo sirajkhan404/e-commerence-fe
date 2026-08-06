@@ -1,38 +1,100 @@
-.loader {
-    --color-1: #fff;
-    --color-2: #ff3d00;
-    --size: 1px;
+// ─── Screen Loader ──────────────────────────────────────────────────────────
 
-    width: calc(48 * var(--size));
-    height: calc(48 * var(--size));
-    display: inline-block;
-    position: relative;
-}
+.screen-loader {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #0f0c29 0%, #302b63 55%, #24243e 100%);
 
-.loader::after,
-.loader::before {
-    content: '';
-    width: calc(48 * var(--size));
-    height: calc(48 * var(--size));
-    border: calc(2 * var(--size)) solid var(--color-1);
-    position: absolute;
-    left: 0;
-    top: 0;
-    box-sizing: border-box;
-    animation: rotation 2s ease-in-out infinite;
-}
-
-.loader::after {
-    border-color: var(--color-2);
-    animation-delay: 1s;
-}
-
-@keyframes rotation {
-    0% {
-        transform: rotate(0deg);
+    .sl-wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
     }
 
-    100% {
-        transform: rotate(360deg);
+    // ── Logo icon ──────────────────────────────────────────────────────────────
+    .sl-logo {
+        font-size: 2.2rem;
+        width: 64px;
+        height: 64px;
+        background: linear-gradient(135deg, #7c3aed, #ec4899);
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 8px 30px rgba(124, 58, 237, 0.6);
+        animation: sl-logo-pulse 2s ease-in-out infinite;
     }
+
+    // ── Concentric rings ──────────────────────────────────────────────────────
+    .sl-rings {
+        position: relative;
+        width: 80px;
+        height: 80px;
+
+        span {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 3px solid transparent;
+
+            &:nth-child(1) {
+                border-top-color: #7c3aed;
+                animation: sl-spin 1.6s linear infinite;
+            }
+
+            &:nth-child(2) {
+                inset: 12px;
+                border-top-color: #a855f7;
+                animation: sl-spin 1.2s linear infinite reverse;
+            }
+
+            &:nth-child(3) {
+                inset: 24px;
+                border-top-color: #ec4899;
+                animation: sl-spin 0.9s linear infinite;
+            }
+        }
+    }
+
+    // ── Loading text ──────────────────────────────────────────────────────────
+    .sl-label {
+        margin: 0;
+        font-family: 'Inter', 'Segoe UI', sans-serif;
+        font-size: 0.85rem;
+        font-weight: 600;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.5);
+
+        span {
+            display: inline-block;
+            color: #a855f7;
+            animation: sl-dot 1.4s ease-in-out infinite;
+        }
+
+        .sl-d1 { animation-delay: 0s; }
+        .sl-d2 { animation-delay: 0.2s; }
+        .sl-d3 { animation-delay: 0.4s; }
+    }
+}
+
+// ── Keyframes ─────────────────────────────────────────────────────────────────
+
+@keyframes sl-spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes sl-logo-pulse {
+    0%, 100% { box-shadow: 0 8px 30px rgba(124, 58, 237, 0.6); transform: scale(1); }
+    50%       { box-shadow: 0 8px 50px rgba(124, 58, 237, 0.9); transform: scale(1.06); }
+}
+
+@keyframes sl-dot {
+    0%, 80%, 100% { opacity: 0.3; transform: translateY(0); }
+    40%            { opacity: 1;   transform: translateY(-4px); }
 }

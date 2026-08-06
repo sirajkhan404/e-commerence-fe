@@ -27,9 +27,12 @@ const AuthProvider = ({ children }) => {
 
         const jwt = token || localStorage.getItem("jwt")
 
-        if (!jwt) { setIsAppLoading(false); return }
+        // Minimum 2 second loader display
+        const minDelay = new Promise(resolve => setTimeout(resolve, 2000))
 
-        axios.get(window.api + "/api/auth/user", { headers: { Authorization: `Bearer ${jwt}` } })
+        if (!jwt) { await minDelay; setIsAppLoading(false); return }
+
+        const apiCall = axios.get(window.api + "/api/auth/user", { headers: { Authorization: `Bearer ${jwt}` } })
             .then(res => {
                 const { status, data } = res
                 if (status === 200) {
@@ -40,9 +43,10 @@ const AuthProvider = ({ children }) => {
             .catch(err => {
                 console.log(err)
             })
-            .finally(() => {
-                setIsAppLoading(false);
-            })
+
+        // Wait for BOTH: API response + 2 seconds minimum
+        await Promise.all([apiCall, minDelay])
+        setIsAppLoading(false)
     }
 
     useEffect(() => { readProfile() }, [])

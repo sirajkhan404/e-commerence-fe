@@ -1,11 +1,9 @@
 import React, { useState } from 'react'
-import { Button, Col, Form, Input, Row, Typography } from 'antd'
-import { Link, useNavigate, } from 'react-router-dom'
+import { Button, Form, Input } from 'antd'
+import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios';
 import { useAuth } from '@/context/Auth';
 
-
-const { Title, Paragraph } = Typography;
 
 const initialState = { email: "", password: "" }
 
@@ -60,27 +58,75 @@ const Login = () => {
     }
 
     return (
-        <main className='auth p-3 p-md-4 p-lg-5 ' >
-            <div className="card p-3 p-md-4">
-                <Row>
-                    <Col span={24} className='text-center mb-4'>
-                        <Title level={2} className='text-center'>Login</Title>
-                        <Paragraph>Don't have an account? <Link to="/auth/register">Register</Link></Paragraph>
-                    </Col>
-                    <Col span={24}>
-                        <Form layout="vertical">
-                            <Form.Item label="Email" required>
-                                <Input placeholder='Enter your email' size='large' name='email' value={state.email} onChange={handleChange} />
-                            </Form.Item>
-                            <Form.Item label="Password" required>
-                                <Input.Password placeholder='Enter your password' size='large' name='password' value={state.password} onChange={handleChange} />
-                            </Form.Item>
-                            <Form.Item className='mb-0'>
-                                <Button type="primary" size='large' block className='mb-2' htmlType="submit" loading={isProcessing} onClick={handleSubmit}>Login</Button>
-                            </Form.Item>
-                        </Form>
-                    </Col>
-                </Row>
+        <main className='auth'>
+
+            {/* Decorative floating dots */}
+            <div className="auth-dots">
+                <span /><span /><span /><span /><span />
+            </div>
+
+            <div className="auth-card">
+
+                {/* Brand */}
+                <div className="auth-brand">
+                    <div className="brand-icon">🛍️</div>
+                    <span className="brand-name">MyStore</span>
+                </div>
+
+                {/* Header */}
+                <div className="auth-header">
+                    <h2 className="auth-title">Welcome Back!</h2>
+                    <p className="auth-subtitle">
+                        Don't have an account?{' '}
+                        <Link to="/auth/register">Sign Up Free</Link>
+                    </p>
+                </div>
+
+                <div className="auth-divider" />
+
+                {/* Form */}
+                <Form layout="vertical" autoComplete="off">
+
+                    <Form.Item label="Email Address" required>
+                        <Input
+                            placeholder='Enter your email'
+                            size='large'
+                            name='email'
+                            type="email"
+                            value={state.email}
+                            onChange={handleChange}
+                            prefix={<span style={{ color: 'rgba(167,139,250,0.7)', marginRight: 4 }}>✉️</span>}
+                        />
+                    </Form.Item>
+
+                    <Form.Item label="Password" required>
+                        <Input.Password
+                            placeholder='Enter your password'
+                            size='large'
+                            name='password'
+                            value={state.password}
+                            onChange={handleChange}
+                            prefix={<span style={{ color: 'rgba(167,139,250,0.7)', marginRight: 4 }}>🔒</span>}
+                        />
+                    </Form.Item>
+
+                    <Form.Item className='mb-0'>
+                        <Button
+                            loading={isProcessing}
+                            onClick={handleSubmit}
+                            className="auth-btn"
+                            htmlType="submit"
+                        >
+                            {!isProcessing && '🚀 '} Sign In
+                        </Button>
+                    </Form.Item>
+
+                </Form>
+
+                <p className="auth-footer-text">
+                    🔒 Secured with end-to-end encryption
+                </p>
+
             </div>
         </main>
     )
